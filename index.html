@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Mobile ke liye responsive banana zaroori hai -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamFlow — Smart To-Do</title>
+
+  <!-- Google Fonts: Syne = heading font, Nunito = body font -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Lucide Icons: lightweight icon library -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== BACKGROUND BLOBS (decorative gradient circles) ===== -->
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <!-- ===== MAIN APP WRAPPER ===== -->
+  <div class="app-wrapper">
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon">✦</div>
+        <div>
+          <h1 class="app-title">DreamFlow</h1>
+          <p class="app-subtitle">Smart To-Do List</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <!-- Streak badge: kitne din se use kar rahe ho -->
+        <div class="streak-badge" title="Current Streak">
+          <span class="streak-fire">🔥</span>
+          <span id="streakCount">0</span>
+          <span class="streak-label">day streak</span>
+        </div>
+        <!-- Dark/Light mode toggle button -->
+        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+          <i data-lucide="moon" class="icon-moon"></i>
+          <i data-lucide="sun" class="icon-sun"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== STATS DASHBOARD (4 cards) ===== -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--accent-gradient)">
+          <i data-lucide="list-checks"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="totalTasks">0</span>
+          <span class="stat-label">Total Tasks</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--success-gradient)">
+          <i data-lucide="check-circle-2"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="doneTasks">0</span>
+          <span class="stat-label">Completed</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--warn-gradient)">
+          <i data-lucide="clock"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="pendingTasks">0</span>
+          <span class="stat-label">Pending</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: var(--danger-gradient)">
+          <i data-lucide="flame"></i>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number" id="highPriority">0</span>
+          <span class="stat-label">High Priority</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROGRESS BAR ===== -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Today's Progress</span>
+        <span class="progress-percent" id="progressPercent">0%</span>
+      </div>
+      <div class="progress-track">
+        <!-- Width JS se set hogi based on completed/total -->
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- ===== MOTIVATIONAL QUOTE ===== -->
+    <div class="quote-card" id="quoteCard">
+      <span class="quote-icon">💬</span>
+      <p class="quote-text" id="quoteText">Loading inspiration...</p>
+    </div>
+
+    <!-- ===== ADD TASK FORM ===== -->
+    <div class="add-task-section">
+      <h2 class="section-title">
+        <i data-lucide="plus-circle"></i> Add New Task
+      </h2>
+
+      <div class="task-form glass-card">
+        <!-- Row 1: Task Title -->
+        <div class="form-row">
+          <div class="input-group full-width">
+            <label class="input-label">Task Title *</label>
+            <input type="text" id="taskTitle" class="form-input"
+              placeholder="What do you need to do?" maxlength="100" />
+          </div>
+        </div>
+
+        <!-- Row 2: Priority + Due Date -->
+        <div class="form-row two-col">
+          <div class="input-group">
+            <label class="input-label">Priority</label>
+            <select id="taskPriority" class="form-select">
+              <option value="low">🟢 Low</option>
+              <option value="medium" selected>🟡 Medium</option>
+              <option value="high">🔴 High</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Due Date</label>
+            <input type="date" id="taskDueDate" class="form-input" />
+          </div>
+        </div>
+
+        <!-- Row 3: Notes -->
+        <div class="form-row">
+          <div class="input-group full-width">
+            <label class="input-label">Notes (optional)</label>
+            <textarea id="taskNotes" class="form-textarea"
+              placeholder="Any extra details..." rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- Add Button -->
+        <button class="btn-primary" id="addTaskBtn">
+          <i data-lucide="sparkles"></i> Add Task
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== FILTER & SEARCH SECTION ===== -->
+    <div class="filter-section">
+      <!-- Search bar -->
+      <div class="search-bar">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" id="searchInput" class="search-input"
+          placeholder="Search tasks..." />
+        <button class="clear-search" id="clearSearch" style="display:none">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <!-- Filter buttons: All / Pending / Completed -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="pending">Pending</button>
+        <button class="filter-tab" data-filter="completed">Completed</button>
+        <button class="filter-tab" data-filter="high">🔴 High</button>
+        <button class="filter-tab" data-filter="medium">🟡 Medium</button>
+        <button class="filter-tab" data-filter="low">🟢 Low</button>
+      </div>
+    </div>
+
+    <!-- ===== SORT & EXPORT ROW ===== -->
+    <div class="action-row">
+      <div class="sort-group">
+        <label class="input-label">Sort by:</label>
+        <select id="sortSelect" class="form-select small">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="priority">Priority</option>
+          <option value="duedate">Due Date</option>
+        </select>
+      </div>
+      <div class="export-group">
+        <button class="btn-outline" id="exportBtn">
+          <i data-lucide="download"></i> Export
+        </button>
+        <label class="btn-outline" for="importFile">
+          <i data-lucide="upload"></i> Import
+        </label>
+        <input type="file" id="importFile" accept=".json" style="display:none" />
+        <button class="btn-danger-outline" id="clearAllBtn">
+          <i data-lucide="trash-2"></i> Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== TASK LIST ===== -->
+    <div class="tasks-section">
+      <h2 class="section-title">
+        <i data-lucide="layout-list"></i> My Tasks
+        <span class="task-count-badge" id="taskCountBadge">0</span>
+      </h2>
+
+      <!-- Tasks will be injected here by JavaScript -->
+      <div class="task-list" id="taskList">
+        <!-- Empty state shown when no tasks -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-illustration">✦</div>
+          <h3>No tasks yet!</h3>
+          <p>Add your first task above to get started.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .app-wrapper -->
+
+  <!-- ===== EDIT MODAL (popup for editing a task) ===== -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-box glass-card">
+      <div class="modal-header">
+        <h3>Edit Task</h3>
+        <button class="modal-close" id="closeModal">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group full-width">
+          <label class="input-label">Task Title *</label>
+          <input type="text" id="editTitle" class="form-input" />
+        </div>
+        <div class="form-row two-col" style="margin-top:1rem">
+          <div class="input-group">
+            <label class="input-label">Priority</label>
+            <select id="editPriority" class="form-select">
+              <option value="low">🟢 Low</option>
+              <option value="medium">🟡 Medium</option>
+              <option value="high">🔴 High</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Due Date</label>
+            <input type="date" id="editDueDate" class="form-input" />
+          </div>
+        </div>
+        <div class="input-group full-width" style="margin-top:1rem">
+          <label class="input-label">Notes</label>
+          <textarea id="editNotes" class="form-textarea" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" id="cancelEdit">Cancel</button>
+        <button class="btn-primary" id="saveEdit">
+          <i data-lucide="save"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST NOTIFICATION (small popup messages) ===== -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamFlow — Dream List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="stylesheet" href="dreamlist.css" />
+</head>
+<body>
+
+  <!-- Floating background shapes -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <div class="star-field" id="starField"></div>
+
+  <div class="app-wrapper">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-wrap">
+          <span class="logo-star">✦</span>
+          <div class="logo-rings"></div>
+        </div>
+        <div>
+          <h1 class="app-title">DreamFlow</h1>
+          <p class="app-subtitle">Dream List &amp; Goal Tracker</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="dream-count-pill">
+          <i data-lucide="sparkles"></i>
+          <span id="dreamCountPill">0 dreams</span>
+        </div>
+        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+          <i data-lucide="moon" class="icon-moon"></i>
+          <i data-lucide="sun" class="icon-sun"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- STATS ROW -->
+    <section class="stats-row">
+      <div class="stat-chip">
+        <span class="chip-icon">🌟</span>
+        <div><span class="chip-num" id="totalDreams">0</span><span class="chip-lbl">Total Dreams</span></div>
+      </div>
+      <div class="stat-chip">
+        <span class="chip-icon">🏆</span>
+        <div><span class="chip-num" id="achievedDreams">0</span><span class="chip-lbl">Achieved</span></div>
+      </div>
+      <div class="stat-chip">
+        <span class="chip-icon">🚀</span>
+        <div><span class="chip-num" id="inProgressDreams">0</span><span class="chip-lbl">In Progress</span></div>
+      </div>
+      <div class="stat-chip">
+        <span class="chip-icon">💯</span>
+        <div><span class="chip-num" id="avgProgress">0%</span><span class="chip-lbl">Avg Progress</span></div>
+      </div>
+    </section>
+
+    <!-- OVERALL PROGRESS -->
+    <div class="overall-progress glass-card">
+      <div class="op-header">
+        <span class="op-label">Overall Dream Progress</span>
+        <span class="op-pct" id="overallPct">0%</span>
+      </div>
+      <div class="op-track"><div class="op-fill" id="overallFill"></div></div>
+      <p class="op-sub" id="overallSub">Add your first dream to begin your journey ✨</p>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="quote-banner" id="quoteBanner">
+      <div class="qb-star">✦</div>
+      <p id="quoteText">Click to change quote...</p>
+    </div>
+
+    <!-- ADD DREAM FORM -->
+    <section class="add-section">
+      <h2 class="section-title"><i data-lucide="plus-circle"></i> Add a New Dream</h2>
+      <div class="dream-form glass-card">
+
+        <div class="form-row">
+          <div class="input-group full">
+            <label class="lbl">Dream Title *</label>
+            <input type="text" id="dreamTitle" class="finput" placeholder="What do you dream of achieving?" maxlength="120" />
+          </div>
+        </div>
+
+        <div class="form-row two-col">
+          <div class="input-group">
+            <label class="lbl">Category</label>
+            <select id="dreamCat" class="fselect">
+              <option value="business">💼 Business</option>
+              <option value="health">💪 Health</option>
+              <option value="learning">📚 Learning</option>
+              <option value="spiritual">🤲 Spiritual</option>
+              <option value="family">❤️ Family</option>
+              <option value="travel">✈️ Travel</option>
+              <option value="finance">💰 Finance</option>
+              <option value="creativity">🎨 Creativity</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="lbl">Target Date</label>
+            <input type="date" id="dreamDate" class="finput" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group full">
+            <label class="lbl">Motivational Note</label>
+            <textarea id="dreamNote" class="ftextarea" rows="2" placeholder="Why is this dream important to you?"></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group full">
+            <label class="lbl">Initial Progress: <span id="progressLabel">0%</span></label>
+            <input type="range" id="dreamProgress" class="frange" min="0" max="100" value="0" />
+            <div class="range-marks">
+              <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-add" id="addDreamBtn">
+          <i data-lucide="star"></i> Add to Dream List
+        </button>
+      </div>
+    </section>
+
+    <!-- FILTER + SEARCH -->
+    <div class="filter-area">
+      <div class="search-wrap">
+        <i data-lucide="search" class="si"></i>
+        <input type="text" id="searchInput" class="search-inp" placeholder="Search your dreams..." />
+        <button id="clearSearch" class="clear-x" style="display:none"><i data-lucide="x"></i></button>
+      </div>
+      <div class="cat-filters" id="catFilters">
+        <button class="cf-btn active" data-cat="all">All</button>
+        <button class="cf-btn" data-cat="business">💼</button>
+        <button class="cf-btn" data-cat="health">💪</button>
+        <button class="cf-btn" data-cat="learning">📚</button>
+        <button class="cf-btn" data-cat="spiritual">🤲</button>
+        <button class="cf-btn" data-cat="family">❤️</button>
+        <button class="cf-btn" data-cat="travel">✈️</button>
+        <button class="cf-btn" data-cat="finance">💰</button>
+        <button class="cf-btn" data-cat="creativity">🎨</button>
+        <button class="cf-btn" data-cat="achieved">🏆 Done</button>
+      </div>
+    </div>
+
+    <!-- SORT + EXPORT ROW -->
+    <div class="action-row">
+      <div class="sort-group">
+        <label class="lbl">Sort:</label>
+        <select id="sortSelect" class="fselect sm">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="progress-high">Most Progress</option>
+          <option value="progress-low">Least Progress</option>
+          <option value="targetdate">Target Date</option>
+        </select>
+      </div>
+      <div class="export-group">
+        <button class="btn-outline" id="exportBtn"><i data-lucide="download"></i> Export</button>
+        <label class="btn-outline" for="importFile"><i data-lucide="upload"></i> Import</label>
+        <input type="file" id="importFile" accept=".json" style="display:none" />
+        <button class="btn-danger" id="clearAllBtn"><i data-lucide="trash-2"></i> Clear All</button>
+      </div>
+    </div>
+
+    <!-- DREAM CARDS LIST -->
+    <section class="dreams-section">
+      <h2 class="section-title">
+        <i data-lucide="layout-grid"></i> My Dreams
+        <span class="count-badge" id="countBadge">0</span>
+      </h2>
+      <div class="dreams-grid" id="dreamGrid"></div>
+    </section>
+
+  </div><!-- end .app-wrapper -->
+
+  <!-- EDIT MODAL -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-box glass-card">
+      <div class="modal-hdr">
+        <h3>✦ Edit Dream</h3>
+        <button class="modal-close" id="closeModal"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group full"><label class="lbl">Dream Title *</label>
+          <input type="text" id="eTitle" class="finput" />
+        </div>
+        <div class="form-row two-col" style="margin-top:1rem">
+          <div class="input-group"><label class="lbl">Category</label>
+            <select id="eCat" class="fselect">
+              <option value="business">💼 Business</option>
+              <option value="health">💪 Health</option>
+              <option value="learning">📚 Learning</option>
+              <option value="spiritual">🤲 Spiritual</option>
+              <option value="family">❤️ Family</option>
+              <option value="travel">✈️ Travel</option>
+              <option value="finance">💰 Finance</option>
+              <option value="creativity">🎨 Creativity</option>
+            </select>
+          </div>
+          <div class="input-group"><label class="lbl">Target Date</label>
+            <input type="date" id="eDate" class="finput" />
+          </div>
+        </div>
+        <div class="input-group full" style="margin-top:1rem"><label class="lbl">Motivational Note</label>
+          <textarea id="eNote" class="ftextarea" rows="2"></textarea>
+        </div>
+        <div class="input-group full" style="margin-top:1rem">
+          <label class="lbl">Progress: <span id="eProgressLabel">0%</span></label>
+          <input type="range" id="eProgress" class="frange" min="0" max="100" value="0" />
+        </div>
+      </div>
+      <div class="modal-ftr">
+        <button class="btn-outline" id="cancelEdit">Cancel</button>
+        <button class="btn-add sm" id="saveEdit"><i data-lucide="save"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- CONFETTI canvas for achievement -->
+  <canvas id="confettiCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:9998;"></canvas>
+
+  <script src="dreamlist.js"></script>
+</body>
+</html>

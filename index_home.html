@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamFlow — Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080812;
+      --glass: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.1);
+      --gold: #f5c542;
+      --violet: #a78bfa;
+      --rose: #fb7185;
+      --text: #ede8ff;
+      --muted: #6b6890;
+      --dream-grad: linear-gradient(135deg, #f5c542, #fb7185, #a78bfa);
+      --todo-grad: linear-gradient(135deg, #a78bfa, #7c3aed);
+    }
+    [data-theme="light"] {
+      --bg: #f4f3ff;
+      --glass: rgba(255,255,255,0.75);
+      --border: rgba(167,139,250,0.2);
+      --text: #1a1630;
+      --muted: #8884aa;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 1.5rem;
+      transition: background 0.3s, color 0.3s;
+      overflow: hidden;
+    }
+    /* Background orbs */
+    .orb { position:fixed; border-radius:50%; filter:blur(80px); opacity:0.13; pointer-events:none; z-index:0; }
+    .o1 { width:500px;height:500px;background:#7c3aed;top:-100px;left:-100px; }
+    .o2 { width:400px;height:400px;background:#f5c542;bottom:-100px;right:-100px; }
+    .o3 { width:300px;height:300px;background:#fb7185;top:50%;left:50%;transform:translate(-50%,-50%); }
+    [data-theme="light"] .orb { opacity:0.06; }
+
+    /* Stars */
+    .stars { position:fixed;inset:0;z-index:0;pointer-events:none; }
+    .star {
+      position:absolute; border-radius:50%; background:#fff;
+      animation: twinkle var(--d,3s) ease-in-out infinite;
+      animation-delay: var(--dl,0s);
+    }
+    @keyframes twinkle {
+      0%,100%{opacity:0;transform:scale(0.8)}
+      50%{opacity:var(--op,0.5);transform:scale(1.2)}
+    }
+    [data-theme="light"] .stars { display:none; }
+
+    /* Main content */
+    .container {
+      position: relative; z-index: 1;
+      text-align: center;
+      max-width: 640px; width: 100%;
+    }
+
+    /* Logo */
+    .logo {
+      display: inline-flex; align-items: center;
+      justify-content: center; gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .logo-icon {
+      width: 56px; height: 56px;
+      background: var(--dream-grad);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 8px 30px rgba(245,197,66,0.3);
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-8px)}
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 800;
+      background: var(--dream-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 1rem; color: var(--muted);
+      margin-bottom: 3rem; font-style: italic;
+      line-height: 1.6;
+    }
+    .tagline span {
+      background: var(--dream-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700; font-style: normal;
+    }
+
+    /* App Cards */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 480px) {
+      .apps-grid { grid-template-columns: 1fr; }
+      .brand { font-size: 1.7rem; }
+    }
+
+    .app-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2rem 1.5rem;
+      cursor: pointer;
+      text-decoration: none; color: inherit;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1),
+                  box-shadow 0.3s, border-color 0.3s;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1rem;
+      position: relative; overflow: hidden;
+    }
+    .app-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-grad);
+      border-radius: 24px 24px 0 0;
+    }
+    .app-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--card-glow);
+      border-color: var(--card-accent);
+    }
+
+    /* To-Do Card */
+    .todo-card {
+      --card-grad: linear-gradient(90deg, #a78bfa, #7c3aed);
+      --card-accent: rgba(167,139,250,0.4);
+      --card-glow: rgba(167,139,250,0.15);
+    }
+    /* Dream Card */
+    .dream-card-link {
+      --card-grad: linear-gradient(90deg, #f5c542, #fb7185, #a78bfa);
+      --card-accent: rgba(245,197,66,0.4);
+      --card-glow: rgba(245,197,66,0.15);
+    }
+
+    .card-emoji {
+      font-size: 2.8rem;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    .todo-card .card-emoji { animation-delay: 0s; }
+    .dream-card-link .card-emoji { animation-delay: 0.5s; }
+    @keyframes pulse {
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.12)}
+    }
+
+    .card-title-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700;
+    }
+    .todo-card .card-title-text {
+      background: linear-gradient(135deg,#a78bfa,#7c3aed);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .dream-card-link .card-title-text {
+      background: var(--dream-grad);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+
+    .card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; text-align: center; }
+
+    .card-btn-pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.45rem 1.1rem;
+      border-radius: 99px;
+      font-size: 0.78rem; font-weight: 700;
+      color: #fff; margin-top: 0.25rem;
+    }
+    .todo-card .card-btn-pill { background: var(--todo-grad); box-shadow: 0 3px 14px rgba(124,58,237,0.4); }
+    .dream-card-link .card-btn-pill { background: var(--dream-grad); box-shadow: 0 3px 14px rgba(245,197,66,0.35); }
+
+    /* Footer */
+    .footer-txt {
+      font-size: 0.75rem; color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    .footer-txt span {
+      background: var(--dream-grad);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      font-weight: 700;
+    }
+
+    /* Theme toggle */
+    .theme-btn {
+      position: fixed; top: 1.25rem; right: 1.25rem; z-index: 10;
+      width: 42px; height: 42px;
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; transition: 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .theme-btn:hover { border-color: var(--gold); }
+
+    /* Fade-in animation */
+    .container { animation: fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) both; }
+    .app-card:nth-child(1) { animation: fadeUp 0.5s 0.1s both; }
+    .app-card:nth-child(2) { animation: fadeUp 0.5s 0.2s both; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+  <div class="stars" id="stars"></div>
+
+  <!-- Theme Toggle -->
+  <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+
+  <!-- Main -->
+  <div class="container">
+
+    <!-- Logo -->
+    <div class="logo">
+      <div class="logo-icon">✦</div>
+      <span class="brand">DreamFlow</span>
+    </div>
+
+    <p class="tagline">
+      Your personal space to <span>organize tasks</span><br/>
+      and <span>chase your biggest dreams</span> 🌟
+    </p>
+
+    <!-- App Cards -->
+    <div class="apps-grid">
+
+      <!-- To-Do App -->
+      <a class="app-card todo-card" href="index.html">
+        <div class="card-emoji">✅</div>
+        <div class="card-title-text">Smart To-Do</div>
+        <p class="card-desc">Add tasks, set priorities, track daily progress & stay organized</p>
+        <div class="card-btn-pill">Open App →</div>
+      </a>
+
+      <!-- Dream List App -->
+      <a class="app-card dream-card-link" href="dreamlist.html">
+        <div class="card-emoji">🌟</div>
+        <div class="card-title-text">Dream List</div>
+        <p class="card-desc">Set goals, track progress, add motivational notes & achieve dreams</p>
+        <div class="card-btn-pill">Open App →</div>
+      </a>
+
+    </div>
+
+    <p class="footer-txt">
+      Made with ❤️ · <span>DreamFlow v1.0</span> · Your data stays on your device
+    </p>
+
+  </div>
+
+  <script>
+    // Stars
+    const sf = document.getElementById("stars");
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement("div");
+      s.className = "star";
+      const sz = Math.random() * 2.5 + 0.5;
+      s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;--dl:${(Math.random()*5).toFixed(1)}s;--op:${(Math.random()*0.5+0.2).toFixed(2)}`;
+      sf.appendChild(s);
+    }
+    // Theme
+    const btn = document.getElementById("themeBtn");
+    let theme = localStorage.getItem("df_home_theme") || "dark";
+    function applyTheme(t) {
+      document.documentElement.setAttribute("data-theme", t);
+      btn.textContent = t === "dark" ? "🌙" : "☀️";
+      localStorage.setItem("df_home_theme", t);
+    }
+    applyTheme(theme);
+    btn.addEventListener("click", () => {
+      theme = theme === "dark" ? "light" : "dark";
+      applyTheme(theme);
+    });
+  </script>
+</body>
+</html>
