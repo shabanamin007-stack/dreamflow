@@ -2,7 +2,7 @@
   "name": "DreamFlow",
   "short_name": "DreamFlow",
   "description": "Smart To-Do List and Dream Goal Tracker",
-  "start_url": "/dreamflow/home.html",
+  "start_url": "/dreamflow/index.html",
   "display": "standalone",
   "background_color": "#080812",
   "theme_color": "#a78bfa",
